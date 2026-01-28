@@ -2,12 +2,15 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './App.css';
 
-const API = "http://localhost:4000/posts";
+const API = process.env.API_URL || "http://localhost:4000/posts";
 
 function App() {
   const [posts, setPosts] = useState([]);
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [rollNo, setRollNo] = useState("");
+  const [department, setDepartment] = useState("");
+  const [age, setAge] = useState("");
   const [editId, setEditId] = useState(null);
 
   // Fetch posts
@@ -21,23 +24,29 @@ function App() {
   };
 
   const addOrUpdatePost = async () => {
-    if (!title || !body) return;
+    if (!name || !email || !rollNo || !department || !age) return;
 
     if (editId) {
-      await axios.put(`${API}/${editId}`, { title, body });
+      await axios.put(`${API}/${editId}`, { name, email, rollNo, department, age });
       setEditId(null);
     } else {
-      await axios.post(API, { title, body });
+      await axios.post(API, { name, email, rollNo, department, age });
     }
 
-    setTitle("");
-    setBody("");
+    setName("");
+    setEmail("");
+    setRollNo("");
+    setDepartment("");
+    setAge("");
     fetchPosts();
   };
 
   const editPost = (post) => {
-    setTitle(post.title);
-    setBody(post.body);
+    setName(post.name);
+    setEmail(post.email);
+    setRollNo(post.rollNo);
+    setDepartment(post.department);
+    setAge(post.age);
     setEditId(post._id);
   };
 
@@ -54,8 +63,11 @@ function App() {
         <thead>
           <tr>
             <th>ID</th>
-            <th>TITLE</th>
-            <th>BODY</th>
+            <th>NAME</th>
+            <th>EMAIL</th>
+            <th>ROLL NO</th>
+            <th>DEPARTMENT</th>
+            <th>AGE</th>
             <th>ACTION</th>
           </tr>
         </thead>
@@ -63,8 +75,11 @@ function App() {
           {posts.map((post, index) => (
             <tr key={post._id}>
               <td>{index + 1}</td>
-              <td>{post.title}</td>
-              <td>{post.body}</td>
+              <td>{post.name}</td>
+              <td>{post.email}</td>
+              <td>{post.rollNo}</td>
+              <td>{post.department}</td>
+              <td>{post.age}</td>
               <td>
                 <button className="edit" onClick={() => editPost(post)}>Edit</button>
                 <button className="delete" onClick={() => deletePost(post._id)}>Delete</button>
@@ -75,16 +90,37 @@ function App() {
             <td></td>
             <td>
               <input
-                placeholder="Enter title"
-                value={title}
-                onChange={e => setTitle(e.target.value)}
+                placeholder="Enter name"
+                value={name}
+                onChange={e => setName(e.target.value)}
               />
             </td>
             <td>
               <input
-                placeholder="Enter body"
-                value={body}
-                onChange={e => setBody(e.target.value)}
+                placeholder="Enter email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+              />
+            </td>
+            <td>
+              <input
+                placeholder="Enter roll no"
+                value={rollNo}
+                onChange={e => setRollNo(e.target.value)}
+              />
+            </td>
+            <td>
+              <input
+                placeholder="Enter department"
+                value={department}
+                onChange={e => setDepartment(e.target.value)}
+              />
+            </td>
+            <td>
+              <input
+                placeholder="Enter age"
+                value={age}
+                onChange={e => setAge(e.target.value)}
               />
             </td>
             <td>

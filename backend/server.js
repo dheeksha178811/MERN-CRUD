@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -7,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Compass connection
-mongoose.connect('mongodb://127.0.0.1:27017/postdb')
+mongoose.connect(process.env.MONGO_URL)
 .then(() => console.log("MongoDB Connected"))
 .catch(err => console.log(err));
 
@@ -15,4 +16,5 @@ mongoose.connect('mongodb://127.0.0.1:27017/postdb')
 const postRoutes = require('./routes/posts');
 app.use('/posts', postRoutes);
 
-app.listen(4000, () => console.log("Server running on port 4000"));
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => console.log("Server running on port 4000"));
